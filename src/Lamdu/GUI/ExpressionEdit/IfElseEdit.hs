@@ -51,7 +51,7 @@ makeIfThen ::
     WithTextPos View -> AnimId ->
     Tree (Sugar.IfElse (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
-    ExprGuiM i o (Row (Gui Responsive o))
+    ExprGuiM env i o (Row (Gui Responsive o))
 makeIfThen prefixLabel animId ifElse =
     do
         ifGui <-
@@ -80,7 +80,7 @@ makeElseBody ::
     Sugar.Payload (Name o) i o ExprGui.Payload ->
     Tree (Sugar.Else (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
-    ExprGuiM i o [Row (Gui Responsive o)]
+    ExprGuiM env i o [Row (Gui Responsive o)]
 makeElseBody pl (Sugar.SimpleElse expr) =
     ( Row elseAnimId
         <$> (grammar (label Texts.else_) <&> Responsive.fromTextView)
@@ -116,7 +116,7 @@ makeElseBody pl (Sugar.ElseIf (Sugar.ElseIfContent scopes content)) =
 makeElse ::
     (Monad i, Monad o) =>
     Tree (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) (Sugar.Else (Name o) i o) ->
-    ExprGuiM i o [Row (Gui Responsive o)]
+    ExprGuiM env i o [Row (Gui Responsive o)]
 makeElse (Ann pl x) = makeElseBody pl x
 
 verticalRowRender ::
@@ -171,7 +171,7 @@ make ::
     Tree (Sugar.IfElse (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make ifElse pl =
     stdWrapParentExpr pl
     <*> ( renderRows (ExprGui.mParensId pl)

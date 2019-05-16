@@ -66,7 +66,7 @@ make ::
     (Monad i, Monad o) =>
     Sugar.Case (Name o) i o (ExprGui.SugarExpr i o) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make (Sugar.Case mArg (Sugar.Composite alts caseTail addAlt)) pl =
     do
         caseLabel <-
@@ -121,7 +121,7 @@ makeAltRow ::
     (Monad i, Monad o) =>
     Maybe Tag ->
     Sugar.CompositeItem (Name o) i o (ExprGui.SugarExpr i o) ->
-    ExprGuiM i o (Gui Responsive.TaggedItem o)
+    ExprGuiM env i o (Gui Responsive.TaggedItem o)
 makeAltRow mActiveTag (Sugar.CompositeItem delete tag altExpr) =
     do
         env <- Lens.view id
@@ -151,7 +151,7 @@ makeAltsWidget ::
     [Sugar.CompositeItem (Name o) i o (ExprGui.SugarExpr i o)] ->
     Sugar.TagSelection (Name o) i o Sugar.EntityId ->
     Widget.Id ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeAltsWidget mActiveTag alts addAlt altsId =
     do
         existingAltWidgets <- traverse (makeAltRow mActiveTag) alts
@@ -170,7 +170,7 @@ makeAltsWidget mActiveTag alts addAlt altsId =
 makeAddAltRow ::
     (Monad i, Monad o) =>
     Sugar.TagSelection (Name o) i o Sugar.EntityId -> Widget.Id ->
-    ExprGuiM i o (Gui Responsive.TaggedItem o)
+    ExprGuiM env i o (Gui Responsive.TaggedItem o)
 makeAddAltRow addAlt myId =
     TagEdit.makeTagHoleEdit addAlt mkPickResult myId
     & Styled.withColor TextColors.caseTagColor
@@ -197,7 +197,7 @@ separationBar theme animId width =
 makeOpenCase ::
     (Monad i, Monad o) =>
     Sugar.OpenCompositeActions o -> ExprGui.SugarExpr i o ->
-    AnimId -> Gui Responsive o -> ExprGuiM i o (Gui Responsive o)
+    AnimId -> Gui Responsive o -> ExprGuiM env i o (Gui Responsive o)
 makeOpenCase actions rest animId altsGui =
     do
         theme <- Lens.view has

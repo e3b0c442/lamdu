@@ -52,7 +52,7 @@ make ::
     (Monad i, Monad o) =>
     Sugar.Hole (Name o) i o ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make hole pl =
     do
         searchTerm <- SearchMenu.readSearchTerm searchMenuId

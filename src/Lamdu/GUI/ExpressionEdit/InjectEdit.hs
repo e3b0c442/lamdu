@@ -45,7 +45,7 @@ makeInject ::
     ExprGui.SugarExpr i o ->
     Sugar.Tag (Name o) i o ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeInject val tag pl =
     stdWrapParentExpr pl <*>
     do
@@ -83,7 +83,7 @@ makeNullaryInject ::
     (Const (Sugar.NullaryVal (Name o) i o)) ->
     Sugar.Tag (Name o) i o ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeNullaryInject nullary tag pl =
     GuiState.isSubCursor ?? nullaryRecEntityId
     >>= \case
@@ -106,7 +106,7 @@ make ::
     Tree (Sugar.Inject (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make (Sugar.Inject tag mVal) =
     case mVal of
     Sugar.InjectNullary nullary -> makeNullaryInject nullary tag

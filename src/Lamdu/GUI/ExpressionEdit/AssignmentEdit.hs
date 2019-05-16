@@ -110,7 +110,7 @@ mkChosenScopeCursor ::
     Monad i =>
     Tree (Sugar.Function (Name o) i o)
         (Ann (Sugar.Payload name i o ExprGui.Payload)) ->
-    ExprGuiM i o (CurAndPrev (Maybe ScopeCursor))
+    ExprGuiM env i o (CurAndPrev (Maybe ScopeCursor))
 mkChosenScopeCursor func =
     do
         mOuterScopeId <- ExprGuiM.readMScopeId
@@ -195,7 +195,7 @@ blockEventMap env =
 makeScopeNavEdit ::
     (Monad i, Applicative o) =>
     Sugar.Function name i o expr -> Widget.Id -> ScopeCursor ->
-    ExprGuiM i o
+    ExprGuiM env i o
     ( Gui EventMap o
     , Maybe (Gui Widget o)
     )
@@ -267,7 +267,7 @@ makeParamsEdit ::
     Annotation.EvalAnnotationOptions ->
     Widget.Id -> Widget.Id -> Widget.Id ->
     Sugar.BinderParams (Name o) i o ->
-    ExprGuiM i o [Gui Responsive o]
+    ExprGuiM env i o [Gui Responsive o]
 makeParamsEdit annotationOpts delVarBackwardsId lhsId rhsId params =
     case params of
     Sugar.NullParam p ->
@@ -305,7 +305,7 @@ makeMParamsEdit ::
     Widget.Id ->
     Sugar.AddFirstParam (Name o) i o ->
     Maybe (Sugar.BinderParams (Name o) i o) ->
-    ExprGuiM i o (Maybe (Gui Responsive o))
+    ExprGuiM env i o (Maybe (Gui Responsive o))
 makeMParamsEdit mScopeCursor isScopeNavFocused delVarBackwardsId myId bodyId addFirstParam mParams =
     do
         isPrepend <- GuiState.isSubCursor ?? prependId
@@ -356,7 +356,7 @@ makeFunctionParts ::
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
     Widget.Id ->
-    ExprGuiM i o (Parts o)
+    ExprGuiM env i o (Parts o)
 makeFunctionParts funcApplyLimit func pl delVarBackwardsId =
     do
         mScopeCursor <- mkChosenScopeCursor func
@@ -402,7 +402,7 @@ makePlainParts ::
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
     Widget.Id ->
-    ExprGuiM i o (Parts o)
+    ExprGuiM env i o (Parts o)
 makePlainParts assignPlain pl delVarBackwardsId =
     do
         mParamsEdit <-
@@ -421,7 +421,7 @@ makeParts ::
     Tree (Ann (Sugar.Payload (Name o) i o ExprGui.Payload))
         (Sugar.Assignment (Name o) i o) ->
     Widget.Id ->
-    ExprGuiM i o (Parts o)
+    ExprGuiM env i o (Parts o)
 makeParts funcApplyLimit (Ann pl assignmentBody) =
     case assignmentBody of
     Sugar.BodyFunction x -> makeFunctionParts funcApplyLimit x pl
@@ -434,7 +434,7 @@ make ::
     Sugar.Tag (Name o) i o -> Lens.ALens' TextColors Draw.Color ->
     Tree (Ann (Sugar.Payload (Name o) i o ExprGui.Payload))
     (Sugar.Assignment (Name o) i o) ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make pMode defEventMap tag color assignment =
     do
         Parts mParamsEdit mScopeEdit bodyEdit eventMap wrap rhsId <-

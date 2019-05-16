@@ -37,7 +37,7 @@ import           Lamdu.Prelude
 
 undeleteButton ::
     (Monad i, Monad o) =>
-    o Widget.Id -> ExprGuiM i o (TextWidget o)
+    o Widget.Id -> ExprGuiM env i o (TextWidget o)
 undeleteButton undelete =
     do
         actionId <- Element.subAnimId ?? ["Undelete"] <&> Widget.Id
@@ -57,7 +57,7 @@ makeExprDefinition ::
     Sugar.Definition (Name o) i o (Sugar.Payload (Name o) i o ExprGui.Payload) ->
     Sugar.DefinitionExpression (Name o) i o
     (Sugar.Payload (Name o) i o ExprGui.Payload) ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeExprDefinition defEventMap def bodyExpr =
     AssignmentEdit.make (bodyExpr ^. Sugar.dePresentationMode) defEventMap
     (def ^. Sugar.drName) TextColors.definitionColor
@@ -70,7 +70,7 @@ makeBuiltinDefinition ::
     (Monad i, Monad o) =>
     Sugar.Definition (Name o) i o (Sugar.Payload (Name o) i o ExprGui.Payload) ->
     Sugar.DefinitionBuiltin (Name g) o ->
-    ExprGuiM i o (TextWidget o)
+    ExprGuiM env i o (TextWidget o)
 makeBuiltinDefinition def builtin =
     TagEdit.makeBinderTagEdit TextColors.definitionColor name
     /|/ Label.make " = "
@@ -97,7 +97,7 @@ make ::
     (Monad i, Monad o) =>
     Gui EventMap o ->
     Sugar.Definition (Name o) i o (Sugar.Payload (Name o) i o ExprGui.Payload) ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make defEventMap def =
     do
         defStateProp <- def ^. Sugar.drDefinitionState & ExprGuiM.im
@@ -127,7 +127,7 @@ make defEventMap def =
         myId = def ^. Sugar.drEntityId & WidgetIds.fromEntityId
 
 topLevelSchemeTypeView ::
-    Monad i => Sugar.Scheme (Name g) -> ExprGuiM i o (WithTextPos View)
+    Monad i => Sugar.Scheme (Name g) -> ExprGuiM env i o (WithTextPos View)
 topLevelSchemeTypeView scheme =
     -- At the definition-level, Schemes can be shown as ordinary
     -- types to avoid confusing forall's:

@@ -29,7 +29,7 @@ make ::
     (Monad i, Monad o) =>
     Sugar.GetField (Name o) i o (ExprGui.SugarExpr i o) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make (Sugar.GetField recExpr tag) pl =
     do
         recExprEdit <- ExprGuiM.makeSubexpression recExpr

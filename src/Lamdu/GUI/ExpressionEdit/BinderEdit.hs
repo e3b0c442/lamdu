@@ -42,7 +42,7 @@ makeLetEdit ::
     (Monad i, Monad o) =>
     Tree (Sugar.Let (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeLetEdit item =
     do
         env <- Lens.view id
@@ -90,7 +90,7 @@ make ::
     (Monad i, Monad o) =>
     Tree (Ann (Sugar.Payload (Name o) i o ExprGui.Payload))
         (Sugar.Binder (Name o) i o) ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make (Ann pl (Sugar.BinderExpr assignmentBody)) =
     Ann pl assignmentBody & ExprGuiM.makeSubexpression
 make (Ann pl (Sugar.BinderLet l)) =

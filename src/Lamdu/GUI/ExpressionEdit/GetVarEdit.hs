@@ -141,7 +141,7 @@ makeNameRef ::
     Role ->
     Lens.ALens' TextColors Draw.Color -> Widget.Id ->
     Sugar.NameRef (Name x) o ->
-    ExprGuiM i o (TextWidget o)
+    ExprGuiM env i o (TextWidget o)
 makeNameRef role color myId nameRef =
     do
         savePrecursor <- ExprGuiM.mkPrejumpPosSaver
@@ -284,7 +284,7 @@ processDefinitionWidget (Sugar.DefTypeChanged info) myId mkLayout =
 makeGetBinder ::
     (Monad i, Monad o) =>
     Role -> Sugar.BinderVarRef (Name x) o -> Widget.Id ->
-    ExprGuiM i o (TextWidget o)
+    ExprGuiM env i o (TextWidget o)
 makeGetBinder role binderVar myId =
     do
         env <- Lens.view id
@@ -303,7 +303,7 @@ makeGetBinder role binderVar myId =
 makeGetParam ::
     (Monad i, Monad o) =>
     Sugar.ParamRef (Name x) o -> Widget.Id ->
-    ExprGuiM i o (TextWidget o)
+    ExprGuiM env i o (TextWidget o)
 makeGetParam param myId =
     do
         underline <- Lens.view has <&> LightLambda.underline
@@ -321,7 +321,7 @@ makeNoActions ::
     (Monad i, Monad o) =>
     Sugar.GetVar (Name o) o ->
     Widget.Id ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeNoActions getVar myId =
     case getVar of
     Sugar.GetBinder binderVar ->
@@ -335,6 +335,6 @@ make ::
     (Monad i, Monad o) =>
     Sugar.GetVar (Name o) o ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make getVar pl =
     stdWrap pl <*> makeNoActions getVar (WidgetIds.fromExprPayload pl)

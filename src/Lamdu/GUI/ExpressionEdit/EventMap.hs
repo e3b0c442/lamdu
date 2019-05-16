@@ -52,7 +52,7 @@ defaultOptions =
 
 exprInfoFromPl ::
     Monad i =>
-    ExprGuiM i o
+    ExprGuiM env i o
     (Sugar.Payload name i0 o0 ExprGui.Payload -> ExprInfo name i0 o0)
 exprInfoFromPl =
     (,)
@@ -76,12 +76,12 @@ exprInfoFromPl =
 add ::
     (HasWidget w, Monad i, Monad o) =>
     Options -> Sugar.Payload name i o ExprGui.Payload ->
-    ExprGuiM i o (Gui w o -> Gui w o)
+    ExprGuiM env i o (Gui w o -> Gui w o)
 add options pl = (exprInfoFromPl ?? pl) >>= addWith options
 
 addWith ::
     (HasWidget w, Monad i, Monad o) =>
-    Options -> ExprInfo name i o -> ExprGuiM i o (Gui w o -> Gui w o)
+    Options -> ExprInfo name i o -> ExprGuiM env i o (Gui w o -> Gui w o)
 addWith options exprInfo =
     actionsEventMap options exprInfo <&> Widget.weakerEventsWithContext
 
@@ -106,7 +106,7 @@ extractEventMap =
 
 addLetEventMap ::
     (Monad i, Monad o) =>
-    o Sugar.EntityId -> ExprGuiM i o (Gui EventMap o)
+    o Sugar.EntityId -> ExprGuiM env i o (Gui EventMap o)
 addLetEventMap addLet =
     do
         env <- Lens.view id
@@ -125,7 +125,7 @@ addLetEventMap addLet =
 actionsEventMap ::
     (Monad i, Monad o) =>
     Options -> ExprInfo name i o ->
-    ExprGuiM i o (EventContext -> Gui EventMap o)
+    ExprGuiM env i o (EventContext -> Gui EventMap o)
 actionsEventMap options exprInfo =
     ( mconcat
         [ detachEventMap ?? exprInfo ?? actions ^. Sugar.detach

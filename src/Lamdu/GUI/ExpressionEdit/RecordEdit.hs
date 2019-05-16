@@ -79,7 +79,7 @@ addFieldWithSearchTermEventMap myId =
 makeUnit ::
     (Monad i, Monad o) =>
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeUnit pl =
     do
         makeFocusable <- Widget.makeFocusableView ?? myId <&> (Align.tValue %~)
@@ -99,7 +99,7 @@ make ::
     (Monad i, Monad o) =>
     Sugar.Composite (Name o) i o (ExprGui.SugarExpr i o) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make (Sugar.Composite [] Sugar.ClosedComposite{} addField) pl =
     -- Ignore the ClosedComposite actions - it only has the open
     -- action which is equivalent ot deletion on the unit record
@@ -177,7 +177,7 @@ makeAddFieldRow ::
     (Monad i, Monad o) =>
     Sugar.TagSelection (Name o) i o Sugar.EntityId ->
     Sugar.Payload name i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive.TaggedItem o)
+    ExprGuiM env i o (Gui Responsive.TaggedItem o)
 makeAddFieldRow addField pl =
     TagEdit.makeTagHoleEdit addField mkPickResult tagHoleId
     & Styled.withColor TextColors.recordTagColor
@@ -199,7 +199,7 @@ makeAddFieldRow addField pl =
 makeFieldRow ::
     (Monad i, Monad o) =>
     Sugar.CompositeItem (Name o) i o (ExprGui.SugarExpr i o) ->
-    ExprGuiM i o (Gui Responsive.TaggedItem o)
+    ExprGuiM env i o (Gui Responsive.TaggedItem o)
 makeFieldRow (Sugar.CompositeItem delete tag fieldExpr) =
     do
         itemEventMap <- recordDelEventMap delete
@@ -223,7 +223,7 @@ separationBar theme animId width =
 makeOpenRecord ::
     (Monad i, Monad o) =>
     Sugar.OpenCompositeActions o -> ExprGui.SugarExpr i o ->
-    Gui Responsive o -> ExprGuiM i o (Gui Responsive o)
+    Gui Responsive o -> ExprGuiM env i o (Gui Responsive o)
 makeOpenRecord (Sugar.OpenCompositeActions close) rest fieldsGui =
     do
         theme <- Lens.view has

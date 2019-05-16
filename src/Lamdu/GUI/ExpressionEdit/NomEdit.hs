@@ -45,7 +45,7 @@ makeToNom ::
             (Ann (Sugar.Payload (Name o) i o ExprGui.Payload))
             (Sugar.Binder (Name o) i o)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeToNom nom pl =
     nom <&> ExprGuiM.makeBinder
     & mkNomGui id "ToNominal" Texts.toNom mDel pl
@@ -59,7 +59,7 @@ makeFromNom ::
     (Monad i, Monad o) =>
     Sugar.Nominal (Name o) (ExprGui.SugarExpr i o) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeFromNom nom pl =
     nom <&> ExprGuiM.makeSubexpression
     & mkNomGui reverse "FromNominal" Texts.fromNom mDel pl
@@ -71,8 +71,8 @@ mkNomGui ::
     ([Gui Responsive o] -> [Gui Responsive o]) ->
     Text -> OneOf Texts.Code -> Maybe (o Sugar.EntityId) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    Sugar.Nominal (Name o) (ExprGuiM i o (Gui Responsive o)) ->
-    ExprGuiM i o (Gui Responsive o)
+    Sugar.Nominal (Name o) (ExprGuiM env i o (Gui Responsive o)) ->
+    ExprGuiM env i o (Gui Responsive o)
 mkNomGui ordering nomStr textLens mDel pl (Sugar.Nominal tid val) =
     do
         nomColor <- Lens.view (has . Theme.textColors . TextColors.nomColor)

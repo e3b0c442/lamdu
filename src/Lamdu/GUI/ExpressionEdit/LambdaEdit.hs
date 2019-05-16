@@ -133,7 +133,7 @@ make ::
     Tree (Sugar.Lambda (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make lam pl =
     do
         AssignmentEdit.Parts mParamsEdit mScopeEdit bodyEdit eventMap _wrap _rhsId <-

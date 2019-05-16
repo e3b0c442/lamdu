@@ -64,7 +64,7 @@ make ::
     Tree (Sugar.Fragment (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make fragment pl =
     do
         isSelected <- GuiState.isSubCursor ?? myId
@@ -134,7 +134,7 @@ makeFragmentExprEdit ::
     (Monad i, Functor o) =>
     Tree (Sugar.Fragment (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeFragmentExprEdit fragment =
     do
         theme <- Lens.view has

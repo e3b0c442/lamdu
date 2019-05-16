@@ -35,7 +35,7 @@ import           Lamdu.Prelude
 
 make ::
     (Monad i, Monad o) =>
-    ExprGui.SugarExpr i o -> ExprGuiM i o (Gui Responsive o)
+    ExprGui.SugarExpr i o -> ExprGuiM env i o (Gui Responsive o)
 make (Ann pl body) =
     makeEditor body pl & assignCursor
     where
@@ -48,7 +48,7 @@ make (Ann pl body) =
 placeHolder ::
     (Monad i, Applicative o) =>
     Sugar.Payload name i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 placeHolder pl =
     (Widget.makeFocusableView ?? WidgetIds.fromExprPayload pl <&> fmap)
     <*> Label.make "★"
@@ -59,7 +59,7 @@ makeEditor ::
     Tree (Sugar.Body (Name o) i o)
         (Ann (Sugar.Payload (Name o) i o ExprGui.Payload)) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 makeEditor body pl =
     do
         d <- Dotter.addEventMap ?? myId

@@ -276,7 +276,7 @@ make ::
     (Monad i, Monad o) =>
     Sugar.Literal (Property o) ->
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o)
 make lit pl =
     stdWrap pl
     <*>

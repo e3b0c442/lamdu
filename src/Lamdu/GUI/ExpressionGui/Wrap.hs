@@ -52,7 +52,7 @@ parentExprFDConfig =
 stdWrap ::
     (Monad i, Monad o) =>
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o
+    ExprGuiM env i o
     (Gui Responsive o -> Gui Responsive o)
 stdWrap pl =
     (takeFocusIfNeeded pl <&> (Widget.widget %~))
@@ -77,7 +77,7 @@ parentDelegator myId =
 stdWrapParentExpr ::
     (Monad i, Monad o) =>
     Sugar.Payload (Name o) i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Responsive o -> Gui Responsive o)
+    ExprGuiM env i o (Gui Responsive o -> Gui Responsive o)
 stdWrapParentExpr pl =
     (.)
     <$> stdWrap pl
@@ -86,7 +86,7 @@ stdWrapParentExpr pl =
 takeFocusIfNeeded ::
     Monad i =>
     Sugar.Payload name i o ExprGui.Payload ->
-    ExprGuiM i o (Gui Widget o -> Gui Widget o)
+    ExprGuiM env i o (Gui Widget o -> Gui Widget o)
 takeFocusIfNeeded pl =
     Lens.view GuiState.cursor
     <&>
